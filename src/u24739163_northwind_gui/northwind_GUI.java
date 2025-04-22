@@ -27,6 +27,9 @@ public class northwind_GUI extends javax.swing.JFrame {
         jCreateCustomer.setSize(500, 300);
         jUpdateCustomer.setSize(450, 320);
         jDeleteCustomer.setSize(450, 220);
+        String dbURL = System.getenv("DB_URL");
+        String dbUser = System.getenv("DB_USER");
+        String dbPassword = System.getenv("DB_PASSWORD");
     }
 
     /**
