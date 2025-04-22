@@ -20,6 +20,7 @@ public class U24739163_northwind_GUI {
         northwind_GUI x = new northwind_GUI();
                 x.loadData(null);
                 x.loadProducts();
+                x.loadNotifications();
                 x.setVisible(true);
         /*try {
             // TODO code application logic here

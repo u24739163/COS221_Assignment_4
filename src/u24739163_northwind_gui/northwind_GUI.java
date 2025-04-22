@@ -4,6 +4,8 @@
  */
 package u24739163_northwind_gui;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.*;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -169,6 +171,149 @@ public class northwind_GUI extends javax.swing.JFrame {
         }
         
     }
+    public void loadNotifications() {
+        try {
+            // TODO code application logic here
+            Class.forName("org.mariadb.jdbc.Driver");
+            System.out.println("Driver loaded successfully");
+                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                System.out.println("Database connected");
+                
+                Statement st = con.createStatement();
+                String sqlText;
+                sqlText = "SELECT * FROM customers;";
+                System.out.println(sqlText);
+                st.execute(sqlText);
+                DefaultTableModel model = new DefaultTableModel(new String[]{"id", "Company", "Last Name", "First Name", "Job Title", "Business Phone", "Fax Number", "Address", "City", "State Province", "Zip Code", "Country Region"}, 0);
+                jTableNotifications.setModel(model);
+                ResultSet rs = st.executeQuery(sqlText);
+                String i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr;
+                while(rs.next()) {
+                    i = rs.getString("id");
+                    c = rs.getString("company");
+                    l = rs.getString("last_name");
+                    f = rs.getString("first_name");
+                    jt = rs.getString("job_title");
+                    bp = rs.getString("business_phone");
+                    fn = rs.getString("fax_number");
+                    a = rs.getString("address");
+                    ct = rs.getString("city");
+                    sp = rs.getString("state_province");
+                    zc = rs.getString("zip_postal_code");
+                    cr = rs.getString("country_region");
+                    model.addRow(new Object[]{i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr});
+                }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex" + ex);
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
+        
+    }
+    public void addCustomer(String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
+        try {
+            // TODO code application logic here
+            Class.forName("org.mariadb.jdbc.Driver");
+            System.out.println("Driver loaded successfully");
+                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                System.out.println("Database connected");
+                
+                Statement st = con.createStatement();
+                String sqlText;
+                sqlText = "INSERT INTO customers (company, first_name, last_name, job_title, business_phone, fax_number, address, city, state_province, zip_postal_code, country_region) "
+                        + "VALUES (\"" + company + "\", \"" + firstName + "\", \"" + lastName + "\", \"" + jobTitle + "\", \"" + businessPhone + "\", \"" + faxNumber + "\", \"" + address + "\", \"" + city + "\", \"" + stateProvince + "\", \"" + zipCode + "\", \"" + country + "\");" ;
+                System.out.println(sqlText);
+                st.execute(sqlText);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex" + ex);
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
+    }
+    public void updateCustomer(int id, String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
+        try {
+            // TODO code application logic here
+            Class.forName("org.mariadb.jdbc.Driver");
+            System.out.println("Driver loaded successfully");
+            Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+            System.out.println("Database connected");
+                
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE customers SET ");
+        List<String> updates = new ArrayList<>();
+        
+        if (company != null && !company.isEmpty()) {
+            updates.add("company = \"" + company + "\"");
+        }
+        if (firstName != null && !firstName.isEmpty()) {
+            updates.add("first_name = \"" + firstName + "\"");
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            updates.add("last_name = \"" + lastName + "\"");
+        }
+        if (jobTitle != null && !jobTitle.isEmpty()) {
+            updates.add("job_title = \"" + jobTitle + "\"");
+        }
+        if (businessPhone != null && !businessPhone.isEmpty()) {
+            updates.add("business_phone = \"" + businessPhone + "\"");
+        }
+        if (faxNumber != null && !faxNumber.isEmpty()) {
+            updates.add("fax_number = \"" + faxNumber + "\"");
+        }
+        if (address != null && !address.isEmpty()) {
+            updates.add("address = \"" + address + "\"");
+        }
+        if (city != null && !city.isEmpty()) {
+            updates.add("city = \"" + city + "\"");
+        }
+        if (stateProvince != null && !stateProvince.isEmpty()) {
+            updates.add("state_province = \"" + stateProvince + "\"");
+        }
+        if (zipCode != null && !zipCode.isEmpty()) {
+            updates.add("zip_postal_code = \"" + zipCode + "\"");
+        }
+        if (country != null && !country.isEmpty()) {
+            updates.add("country_region = \"" + country + "\"");
+        }
+        
+        // Check if there are any fields to update
+        if (updates.isEmpty()) {
+            System.out.println("No fields to update");
+            return;
+        }
+        
+        sqlBuilder.append(String.join(", ", updates));
+        sqlBuilder.append(" WHERE id = ").append(id);
+        
+        String sqlText = sqlBuilder.toString();
+        System.out.println(sqlText);
+        
+        Statement st = con.createStatement();
+        st.execute(sqlText);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex" + ex);
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
+    }
+    public void deleteCustomer(int id) {
+        try {
+            // TODO code application logic here
+            Class.forName("org.mariadb.jdbc.Driver");
+            System.out.println("Driver loaded successfully");
+                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                System.out.println("Database connected");
+                
+                Statement st = con.createStatement();
+                String sqlText;
+                sqlText = "DELETE FROM customers WHERE id = " + id + ";";
+                System.out.println(sqlText);
+                st.execute(sqlText);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex" + ex);
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
+    }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -214,7 +359,35 @@ public class northwind_GUI extends javax.swing.JFrame {
         txtCountry = new javax.swing.JTextField();
         btnSubmitCustomer = new javax.swing.JButton();
         jUpdateCustomer = new javax.swing.JFrame();
+        txtCountry1 = new javax.swing.JTextField();
+        txtFirstName1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtLastName1 = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txtJob1 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        txtBusiness1 = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        txtCompany1 = new javax.swing.JTextField();
+        txtFax1 = new javax.swing.JTextField();
+        btnSubmitCustomer1 = new javax.swing.JButton();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        txtAddress1 = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
+        txtCity1 = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        txtState1 = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        txtZip1 = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        txtId = new javax.swing.JTextField();
         jDeleteCustomer = new javax.swing.JFrame();
+        txtDelete = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        btnDelete = new javax.swing.JButton();
         jTabbedNorthwindGUI = new javax.swing.JTabbedPane();
         jPanelEmployees = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -230,7 +403,7 @@ public class northwind_GUI extends javax.swing.JFrame {
         jTableReports = new javax.swing.JTable();
         jPanelNotifications = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableNotifications = new javax.swing.JTable();
         btnAddCustomer = new javax.swing.JButton();
         btnUpdateCustomer = new javax.swing.JButton();
         btnDeleteCustomer = new javax.swing.JButton();
@@ -473,26 +646,190 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addGap(19, 19, 19))
         );
 
+        jLabel10.setText("First Name");
+
+        jLabel11.setText("Last Name");
+
+        jLabel12.setText("Job Title");
+
+        jLabel19.setText("Business Phone");
+
+        jLabel20.setText("Fax Number");
+
+        btnSubmitCustomer1.setText("Update Customer");
+        btnSubmitCustomer1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitCustomer1ActionPerformed(evt);
+            }
+        });
+
+        jLabel21.setText("Company");
+
+        jLabel22.setText("Address");
+
+        jLabel23.setText("City");
+
+        jLabel24.setText("State Province");
+
+        jLabel25.setText("Zip Code");
+
+        jLabel26.setText("Country");
+
+        jLabel27.setText("Customer id");
+
         javax.swing.GroupLayout jUpdateCustomerLayout = new javax.swing.GroupLayout(jUpdateCustomer.getContentPane());
         jUpdateCustomer.getContentPane().setLayout(jUpdateCustomerLayout);
         jUpdateCustomerLayout.setHorizontalGroup(
             jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jUpdateCustomerLayout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jUpdateCustomerLayout.createSequentialGroup()
+                        .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtLastName1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtFirstName1)
+                                .addComponent(txtCompany1)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtJob1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtFax1)
+                                    .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel19)
+                                    .addComponent(txtBusiness1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtState1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel24)))
+                            .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCity1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtZip1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCountry1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jUpdateCustomerLayout.createSequentialGroup()
+                        .addComponent(btnSubmitCustomer1)
+                        .addContainerGap())))
         );
         jUpdateCustomerLayout.setVerticalGroup(
             jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCompany1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtLastName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                        .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel25))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtJob1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtFax1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtZip1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(67, 67, 67))
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel22)
+                                    .addComponent(jLabel26))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtBusiness1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCountry1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jUpdateCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addComponent(jLabel23)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCity1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jUpdateCustomerLayout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtState1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(22, 22, 22)
+                .addComponent(btnSubmitCustomer1)
+                .addContainerGap())
         );
+
+        jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel28.setText("Input the ID of the customer you want to delete");
+
+        btnDelete.setText("Delete Customer");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jDeleteCustomerLayout = new javax.swing.GroupLayout(jDeleteCustomer.getContentPane());
         jDeleteCustomer.getContentPane().setLayout(jDeleteCustomerLayout);
         jDeleteCustomerLayout.setHorizontalGroup(
             jDeleteCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(jDeleteCustomerLayout.createSequentialGroup()
+                .addGroup(jDeleteCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDeleteCustomerLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
+                    .addGroup(jDeleteCustomerLayout.createSequentialGroup()
+                        .addGap(162, 162, 162)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jDeleteCustomerLayout.createSequentialGroup()
+                .addGap(176, 176, 176)
+                .addComponent(txtDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jDeleteCustomerLayout.setVerticalGroup(
             jDeleteCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDeleteCustomerLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jLabel28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addComponent(txtDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -615,7 +952,7 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnOpenProductsPopup)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1067, Short.MAX_VALUE)
         );
         jPanelProductsLayout.setVerticalGroup(
             jPanelProductsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -661,7 +998,7 @@ public class northwind_GUI extends javax.swing.JFrame {
         jPanelReports.setLayout(jPanelReportsLayout);
         jPanelReportsLayout.setHorizontalGroup(
             jPanelReportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1067, Short.MAX_VALUE)
         );
         jPanelReportsLayout.setVerticalGroup(
             jPanelReportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -673,30 +1010,59 @@ public class northwind_GUI extends javax.swing.JFrame {
 
         jTabbedNorthwindGUI.addTab("Reports", jPanelReports);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableNotifications.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id", "Company", "Last Name", "First Name", "Job Title", "Business Phone", "Fax Number", "Address", "City", "State Province", "Zip Code", "Country Region"
             }
-        ));
-        jScrollPane5.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(jTableNotifications);
 
         btnAddCustomer.setText("Add customer");
+        btnAddCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddCustomerActionPerformed(evt);
+            }
+        });
 
         btnUpdateCustomer.setText("Update customer");
+        btnUpdateCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateCustomerActionPerformed(evt);
+            }
+        });
 
         btnDeleteCustomer.setText("Delete customer");
+        btnDeleteCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteCustomerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelNotificationsLayout = new javax.swing.GroupLayout(jPanelNotifications);
         jPanelNotifications.setLayout(jPanelNotificationsLayout);
         jPanelNotificationsLayout.setHorizontalGroup(
             jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
             .addGroup(jPanelNotificationsLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(btnAddCustomer)
@@ -704,7 +1070,8 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addComponent(btnUpdateCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDeleteCustomer)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(703, Short.MAX_VALUE))
+            .addComponent(jScrollPane5)
         );
         jPanelNotificationsLayout.setVerticalGroup(
             jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -714,9 +1081,8 @@ public class northwind_GUI extends javax.swing.JFrame {
                     .addComponent(btnAddCustomer)
                     .addComponent(btnUpdateCustomer)
                     .addComponent(btnDeleteCustomer))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedNorthwindGUI.addTab("Notifications", jPanelNotifications);
@@ -792,8 +1158,64 @@ public class northwind_GUI extends javax.swing.JFrame {
 
     private void btnSubmitCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitCustomerActionPerformed
         // TODO add your handling code here:
-
+        try {
+            if(txtCompany.getText().isEmpty() || txtFirstName.getText().isEmpty() || txtLastName.getText().isEmpty() || txtJob.getText().isEmpty() || txtBusiness.getText().isEmpty() || txtFax.getText().isEmpty() || txtAddress.getText().isEmpty() || txtCity.getText().isEmpty() || txtState.getText().isEmpty() || txtZip.getText().isEmpty() || txtCountry.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please fill out all the fields", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                addCustomer(txtCompany.getText(), txtFirstName.getText(), txtLastName.getText(), txtJob.getText(), txtBusiness.getText(), txtFax.getText(), txtAddress.getText(), txtCity.getText(), txtState.getText(), txtZip.getText(), txtCountry.getText());
+                loadNotifications();
+                jCreateCustomer.hide();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data invalid", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSubmitCustomerActionPerformed
+
+    private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
+        // TODO add your handling code here:
+        jCreateCustomer.show();
+    }//GEN-LAST:event_btnAddCustomerActionPerformed
+
+    private void btnUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateCustomerActionPerformed
+        // TODO add your handling code here:
+        jUpdateCustomer.show();
+
+    }//GEN-LAST:event_btnUpdateCustomerActionPerformed
+
+    private void btnDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCustomerActionPerformed
+        // TODO add your handling code here:
+        jDeleteCustomer.show();
+    }//GEN-LAST:event_btnDeleteCustomerActionPerformed
+
+    private void btnSubmitCustomer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitCustomer1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            if(txtId.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please select a customer to update", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+            updateCustomer(Integer.parseInt(txtId.getText()), txtCompany1.getText(), txtFirstName1.getText(), txtLastName1.getText(), txtJob1.getText(), txtBusiness1.getText(), txtFax1.getText(), txtAddress1.getText(), txtCity1.getText(), txtState1.getText(), txtZip1.getText(), txtCountry1.getText());
+            loadNotifications();
+            jUpdateCustomer.hide();
+            } 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data invalid", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSubmitCustomer1ActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            if(txtDelete.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please select a customer to delete", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                deleteCustomer(Integer.parseInt(txtDelete.getText()));
+                loadNotifications();
+                jDeleteCustomer.hide();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data invalid", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -832,22 +1254,37 @@ public class northwind_GUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCustomer;
     private javax.swing.JButton btnAddProducts;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnDeleteCustomer;
     private javax.swing.JButton btnOpenProductsPopup;
     private javax.swing.JButton btnSubmitCustomer;
+    private javax.swing.JButton btnSubmitCustomer1;
     private javax.swing.JButton btnUpdateCustomer;
     private javax.swing.JComboBox<String> jCBCategory;
     private javax.swing.JComboBox<String> jCBSupplier;
     private javax.swing.JFrame jCreateCustomer;
     private javax.swing.JFrame jDeleteCustomer;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -872,24 +1309,37 @@ public class northwind_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTFProductName;
     private javax.swing.JTextField jTFStandardCost;
     private javax.swing.JTabbedPane jTabbedNorthwindGUI;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTableEmployees;
+    private javax.swing.JTable jTableNotifications;
     private javax.swing.JTable jTableProduct;
     private javax.swing.JTable jTableReports;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JFrame jUpdateCustomer;
     private javax.swing.JLabel lblFilter;
     private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtAddress1;
     private javax.swing.JTextField txtBusiness;
+    private javax.swing.JTextField txtBusiness1;
     private javax.swing.JTextField txtCity;
+    private javax.swing.JTextField txtCity1;
     private javax.swing.JTextField txtCompany;
+    private javax.swing.JTextField txtCompany1;
     private javax.swing.JTextField txtCountry;
+    private javax.swing.JTextField txtCountry1;
+    private javax.swing.JTextField txtDelete;
     private javax.swing.JTextField txtFax;
+    private javax.swing.JTextField txtFax1;
     private javax.swing.JTextField txtFilter;
     private javax.swing.JTextField txtFirstName;
+    private javax.swing.JTextField txtFirstName1;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtJob;
+    private javax.swing.JTextField txtJob1;
     private javax.swing.JTextField txtLastName;
+    private javax.swing.JTextField txtLastName1;
     private javax.swing.JTextField txtState;
+    private javax.swing.JTextField txtState1;
     private javax.swing.JTextField txtZip;
+    private javax.swing.JTextField txtZip1;
     // End of variables declaration//GEN-END:variables
 }
