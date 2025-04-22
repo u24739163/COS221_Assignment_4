@@ -16,10 +16,10 @@ import javax.swing.table.DefaultTableModel;
  * @author makha
  */
 public class northwind_GUI extends javax.swing.JFrame {
-
     /**
      * Creates new form northwind_GUI
      */
+    
     public northwind_GUI() {
         initComponents();
         jPopupFrame.hide();
@@ -27,11 +27,24 @@ public class northwind_GUI extends javax.swing.JFrame {
         jCreateCustomer.setSize(500, 300);
         jUpdateCustomer.setSize(450, 320);
         jDeleteCustomer.setSize(450, 220);
-        String dbURL = System.getenv("DB_URL");
-        String dbUser = System.getenv("DB_USER");
-        String dbPassword = System.getenv("DB_PASSWORD");
+        connetToDatabase();
     }
-
+    Connection con;
+    public void connetToDatabase() {
+    try {
+            // TODO code application logic here
+            Class.forName("org.mariadb.jdbc.Driver");
+            String dbURL = System.getenv("DB_URL");
+            String dbUser = System.getenv("DB_USER");
+            String dbPassword = System.getenv("DB_PASSWORD");
+               con = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+                System.out.println("Database connected");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex" + ex);
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,10 +55,11 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void loadData(String filter) {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println(dbPassword);
+  
+                //Connection con = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -64,7 +78,7 @@ public class northwind_GUI extends javax.swing.JFrame {
                     sqlText = "SELECT * FROM (" + sqlText + ") e "
                             + "WHERE LOWER(e.first_name) LIKE LOWER(\'" + filter + "%\')";
                 }
-                System.out.println(sqlText);
+                //System.out.println(sqlText);
                 st.execute(sqlText);
                 DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "First Name", "Last Name", "Address", "Address Line 2", "City", "Region", "Postal Code", "Phone", "Office", "Active"}, 0);
                 jTableEmployees.setModel(model);
@@ -84,8 +98,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                     ac = rs.getString("employment_status");
                     model.addRow(new Object[]{i, f, l, a, a2, c, r, pc, p, o, ac});
                 }
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -94,10 +106,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void addProducts(String pName, double cost, String category, int supplier, boolean discontinued) {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -105,8 +117,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                         + "VALUES (" + supplier + ", \"" + pName + "\", " + cost + ", " + discontinued + ", \"" + category + "\");" ;
                 System.out.println(sqlText);
                 st.execute(sqlText);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -115,10 +125,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void loadProducts() {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //lass.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -138,8 +148,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                     d = rs.getString("discontinued");
                     model.addRow(new Object[]{s, i, pn, lp, c, d});
                 }
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -148,10 +156,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void loadReport() {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -170,8 +178,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                     nop = rs.getString("number of products");
                     model.addRow(new Object[]{c, cat, nop});
                 }
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -180,10 +186,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void loadNotifications() {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -209,8 +215,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                     cr = rs.getString("country_region");
                     model.addRow(new Object[]{i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr});
                 }
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -219,10 +223,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void addCustomer(String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+           // Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
@@ -230,8 +234,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                         + "VALUES (\"" + company + "\", \"" + firstName + "\", \"" + lastName + "\", \"" + jobTitle + "\", \"" + businessPhone + "\", \"" + faxNumber + "\", \"" + address + "\", \"" + city + "\", \"" + stateProvince + "\", \"" + zipCode + "\", \"" + country + "\");" ;
                 System.out.println(sqlText);
                 st.execute(sqlText);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
@@ -239,10 +241,10 @@ public class northwind_GUI extends javax.swing.JFrame {
     public void updateCustomer(int id, String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
         try {
             // TODO code application logic here
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-            Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-            System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+            //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+            //System.out.println("Database connected");
                 
         StringBuilder sqlBuilder = new StringBuilder("UPDATE customers SET ");
         List<String> updates = new ArrayList<>();
@@ -293,26 +295,23 @@ public class northwind_GUI extends javax.swing.JFrame {
         
         Statement st = con.createStatement();
         st.execute(sqlText);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
     }
     public void deleteCustomer(int id) {
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded successfully");
-                Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
-                System.out.println("Database connected");
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
                 
                 Statement st = con.createStatement();
                 String sqlText;
                 sqlText = "DELETE FROM customers WHERE id = " + id + ";";
                 System.out.println(sqlText);
                 st.execute(sqlText);
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ex" + ex);
+
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
