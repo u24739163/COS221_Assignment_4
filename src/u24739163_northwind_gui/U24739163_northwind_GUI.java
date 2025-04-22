@@ -19,6 +19,7 @@ public class U24739163_northwind_GUI {
     public static void main(String[] args) {
         northwind_GUI x = new northwind_GUI();
                 x.loadData(null);
+                x.loadProducts();
                 x.setVisible(true);
         /*try {
             // TODO code application logic here
