@@ -1115,7 +1115,9 @@
                       <Component id="btnUpdateCustomer" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnDeleteCustomer" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="703" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                      <Component id="jTBActive" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="608" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane5" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -1128,6 +1130,7 @@
                           <Component id="btnAddCustomer" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnUpdateCustomer" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnDeleteCustomer" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTBActive" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       <Component id="jScrollPane5" min="-2" pref="390" max="-2" attributes="0"/>
@@ -1254,6 +1257,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteCustomerActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="jTBActive">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Active"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTBActiveActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

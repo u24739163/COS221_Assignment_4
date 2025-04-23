@@ -316,6 +316,9 @@ public class northwind_GUI extends javax.swing.JFrame {
             System.out.println("ex" + ex);
         }
     }
+    public void loadInactive(){
+        
+    }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -409,6 +412,7 @@ public class northwind_GUI extends javax.swing.JFrame {
         btnAddCustomer = new javax.swing.JButton();
         btnUpdateCustomer = new javax.swing.JButton();
         btnDeleteCustomer = new javax.swing.JButton();
+        jTBActive = new javax.swing.JToggleButton();
 
         jMenuItem1.setText("jMenuItem1");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -1058,6 +1062,13 @@ public class northwind_GUI extends javax.swing.JFrame {
             }
         });
 
+        jTBActive.setText("Active");
+        jTBActive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTBActiveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelNotificationsLayout = new javax.swing.GroupLayout(jPanelNotifications);
         jPanelNotifications.setLayout(jPanelNotificationsLayout);
         jPanelNotificationsLayout.setHorizontalGroup(
@@ -1069,7 +1080,9 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addComponent(btnUpdateCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDeleteCustomer)
-                .addContainerGap(703, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(jTBActive)
+                .addContainerGap(608, Short.MAX_VALUE))
             .addComponent(jScrollPane5)
         );
         jPanelNotificationsLayout.setVerticalGroup(
@@ -1079,7 +1092,8 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addGroup(jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddCustomer)
                     .addComponent(btnUpdateCustomer)
-                    .addComponent(btnDeleteCustomer))
+                    .addComponent(btnDeleteCustomer)
+                    .addComponent(jTBActive))
                 .addGap(24, 24, 24)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1216,6 +1230,11 @@ public class northwind_GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void jTBActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBActiveActionPerformed
+        // TODO add your handling code here:
+        loadInactive();
+    }//GEN-LAST:event_jTBActiveActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1305,6 +1324,7 @@ public class northwind_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JToggleButton jTBActive;
     private javax.swing.JTextField jTFProductName;
     private javax.swing.JTextField jTFStandardCost;
     private javax.swing.JTabbedPane jTabbedNorthwindGUI;
