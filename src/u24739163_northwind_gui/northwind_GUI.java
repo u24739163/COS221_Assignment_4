@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package u24739163_northwind_gui;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,22 @@ public class northwind_GUI extends javax.swing.JFrame {
     
     public northwind_GUI() {
         initComponents();
-        jPopupFrame.hide();
+        // Get screen dimensions
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Get window size
+        Dimension windowSize = this.getSize();
+        // Calculate position
+        int x = (screenSize.width - windowSize.width) / 2;
+        int y = (screenSize.height - windowSize.height) / 2;
+        
+        // Set the frames location
+        this.setLocation(x, y);
+        jPopupFrame.setLocation(x, y);
+        jCreateCustomer.setLocation(x, y);
+        jUpdateCustomer.setLocation(x, y);
+        jDeleteCustomer.setLocation(x, y);
+        //jPopupFrame.hide();
+        
         jPopupFrame.setSize(500, 330);
         jCreateCustomer.setSize(500, 300);
         jUpdateCustomer.setSize(450, 320);
@@ -36,10 +53,14 @@ public class northwind_GUI extends javax.swing.JFrame {
     try {
             // TODO code application logic here
             Class.forName("org.mariadb.jdbc.Driver");
-            String dbURL = System.getenv("DB_URL");
-            String dbUser = System.getenv("DB_USER");
-            String dbPassword = System.getenv("DB_PASSWORD");
-               con = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+            String dbProtocol = System.getenv("dvdrental_DB_PROTO");
+            String dbHost = System.getenv("dvdrental_DB_HOST");
+            String dbPort = System.getenv("dvdrental_DB_PORT");
+            String dbName = System.getenv("dvdrental_DB_NAME");
+            String dbUsername = System.getenv("dvdrental_DB_USERNAME");
+            String dbPassword = System.getenv("dvdrental_DB_PASSWORD");
+            String dbURL = dbProtocol + "://" + dbHost + ":" + dbPort + "/" + dbName;
+               con = DriverManager.getConnection(dbURL, dbUsername, dbPassword);
                 System.out.println("Database connected");
         } catch (ClassNotFoundException ex) {
             System.out.println("ex" + ex);
@@ -273,7 +294,6 @@ public class northwind_GUI extends javax.swing.JFrame {
                 
                 Statement st = con.createStatement();
                 String sqlText;
-                
                 sqlText = "INSERT INTO customers (company, first_name, last_name, job_title, business_phone, fax_number, address, city, state_province, zip_postal_code, country_region) "
                         + "VALUES (\"" + company + "\", \"" + firstName + "\", \"" + lastName + "\", \"" + jobTitle + "\", \"" + businessPhone + "\", \"" + faxNumber + "\", \"" + address + "\", \"" + city + "\", \"" + stateProvince + "\", \"" + zipCode + "\", \"" + country + "\");" ;
                 System.out.println(sqlText);
