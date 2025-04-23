@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
@@ -193,7 +195,9 @@ public class northwind_GUI extends javax.swing.JFrame {
                 
                 Statement st = con.createStatement();
                 String sqlText;
-                sqlText = "SELECT * FROM customers;";
+                sqlText = "SELECT c.* " 
+                    + "FROM customers c JOIN invoices i ON c.id = i.id " 
+                    + "WHERE invoice_date > '2006-03-31';";
                 System.out.println(sqlText);
                 st.execute(sqlText);
                 DefaultTableModel model = new DefaultTableModel(new String[]{"id", "Company", "Last Name", "First Name", "Job Title", "Business Phone", "Fax Number", "Address", "City", "State Province", "Zip Code", "Country Region"}, 0);
@@ -218,6 +222,9 @@ public class northwind_GUI extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("ex" + ex);
         }
+        
+    }
+    public void searchNotifications() {
         
     }
     public void addCustomer(String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
@@ -317,7 +324,37 @@ public class northwind_GUI extends javax.swing.JFrame {
         }
     }
     public void loadInactive(){
+        try {
+            Statement st = con.createStatement();
         
+            String sqlText;
+            sqlText = "SELECT c.* " 
+                    + "FROM customers c LEFT JOIN invoices i ON c.id = i.id " 
+                    + "WHERE (i.invoice_date < '2006-03-31' OR i.invoice_date IS NULL);";
+            System.out.println(sqlText);
+                st.execute(sqlText);
+                DefaultTableModel model = new DefaultTableModel(new String[]{"id", "Company", "Last Name", "First Name", "Job Title", "Business Phone", "Fax Number", "Address", "City", "State Province", "Zip Code", "Country Region"}, 0);
+                jTableNotifications.setModel(model);
+                ResultSet rs = st.executeQuery(sqlText);
+                String i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr;
+                while(rs.next()) {
+                    i = rs.getString("id");
+                    c = rs.getString("company");
+                    l = rs.getString("last_name");
+                    f = rs.getString("first_name");
+                    jt = rs.getString("job_title");
+                    bp = rs.getString("business_phone");
+                    fn = rs.getString("fax_number");
+                    a = rs.getString("address");
+                    ct = rs.getString("city");
+                    sp = rs.getString("state_province");
+                    zc = rs.getString("zip_postal_code");
+                    cr = rs.getString("country_region");
+                    model.addRow(new Object[]{i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr});
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(northwind_GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -413,6 +450,8 @@ public class northwind_GUI extends javax.swing.JFrame {
         btnUpdateCustomer = new javax.swing.JButton();
         btnDeleteCustomer = new javax.swing.JButton();
         jTBActive = new javax.swing.JToggleButton();
+        txtSearchCustomers = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -902,7 +941,7 @@ public class northwind_GUI extends javax.swing.JFrame {
                     .addComponent(lblFilter)
                     .addComponent(txtFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -964,7 +1003,7 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnOpenProductsPopup)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
         );
 
         jTabbedNorthwindGUI.addTab("Products", jPanelProducts);
@@ -1069,12 +1108,21 @@ public class northwind_GUI extends javax.swing.JFrame {
             }
         });
 
+        txtSearchCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchCustomersActionPerformed(evt);
+            }
+        });
+
+        jLabel30.setText("Search Customer Name:");
+
         javax.swing.GroupLayout jPanelNotificationsLayout = new javax.swing.GroupLayout(jPanelNotifications);
         jPanelNotifications.setLayout(jPanelNotificationsLayout);
         jPanelNotificationsLayout.setHorizontalGroup(
             jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelNotificationsLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
+            .addComponent(jScrollPane5)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelNotificationsLayout.createSequentialGroup()
+                .addContainerGap(28, Short.MAX_VALUE)
                 .addComponent(btnAddCustomer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnUpdateCustomer)
@@ -1082,18 +1130,23 @@ public class northwind_GUI extends javax.swing.JFrame {
                 .addComponent(btnDeleteCustomer)
                 .addGap(32, 32, 32)
                 .addComponent(jTBActive)
-                .addContainerGap(608, Short.MAX_VALUE))
-            .addComponent(jScrollPane5)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtSearchCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(357, 357, 357))
         );
         jPanelNotificationsLayout.setVerticalGroup(
             jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelNotificationsLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(28, Short.MAX_VALUE)
                 .addGroup(jPanelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddCustomer)
                     .addComponent(btnUpdateCustomer)
                     .addComponent(btnDeleteCustomer)
-                    .addComponent(jTBActive))
+                    .addComponent(jTBActive)
+                    .addComponent(txtSearchCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel30))
                 .addGap(24, 24, 24)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1242,6 +1295,13 @@ public class northwind_GUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTBActiveActionPerformed
 
+    private void txtSearchCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCustomersActionPerformed
+        // TODO add your handling code here:
+        if(txtSearchCustomers.getText() != null) {
+            loadData(txtSearchCustomers.getText());
+        }
+    }//GEN-LAST:event_txtSearchCustomersActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1311,6 +1371,7 @@ public class northwind_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1363,6 +1424,7 @@ public class northwind_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtJob1;
     private javax.swing.JTextField txtLastName;
     private javax.swing.JTextField txtLastName1;
+    private javax.swing.JTextField txtSearchCustomers;
     private javax.swing.JTextField txtState;
     private javax.swing.JTextField txtState1;
     private javax.swing.JTextField txtZip;
