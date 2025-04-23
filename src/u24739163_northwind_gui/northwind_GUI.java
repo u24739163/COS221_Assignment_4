@@ -224,8 +224,44 @@ public class northwind_GUI extends javax.swing.JFrame {
         }
         
     }
-    public void searchNotifications() {
+    public void searchNotifications(String customerName) {
         
+        try {
+            // TODO code application logic here
+            //Class.forName("org.mariadb.jdbc.Driver");
+            //System.out.println("Driver loaded successfully");
+                //Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/u24739163_northwind", "root", "4659");
+                //System.out.println("Database connected");
+                
+                Statement st = con.createStatement();
+                String sqlText;
+                sqlText = "SELECT * " 
+                    + "FROM customers " 
+                    + "WHERE first_name LIKE \'%" + customerName + "%\';";
+                System.out.println(sqlText);
+                st.execute(sqlText);
+                DefaultTableModel model = new DefaultTableModel(new String[]{"id", "Company", "Last Name", "First Name", "Job Title", "Business Phone", "Fax Number", "Address", "City", "State Province", "Zip Code", "Country Region"}, 0);
+                jTableNotifications.setModel(model);
+                ResultSet rs = st.executeQuery(sqlText);
+                String i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr;
+                while(rs.next()) {
+                    i = rs.getString("id");
+                    c = rs.getString("company");
+                    l = rs.getString("last_name");
+                    f = rs.getString("first_name");
+                    jt = rs.getString("job_title");
+                    bp = rs.getString("business_phone");
+                    fn = rs.getString("fax_number");
+                    a = rs.getString("address");
+                    ct = rs.getString("city");
+                    sp = rs.getString("state_province");
+                    zc = rs.getString("zip_postal_code");
+                    cr = rs.getString("country_region");
+                    model.addRow(new Object[]{i, c, l, f, jt, bp, fn, a, ct, sp, zc, cr});
+                }
+        } catch (SQLException ex) {
+            System.out.println("ex" + ex);
+        }
     }
     public void addCustomer(String company, String firstName, String lastName, String jobTitle, String businessPhone, String faxNumber, String address, String city, String stateProvince, String zipCode, String country) {
         try {
@@ -1298,7 +1334,7 @@ public class northwind_GUI extends javax.swing.JFrame {
     private void txtSearchCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCustomersActionPerformed
         // TODO add your handling code here:
         if(txtSearchCustomers.getText() != null) {
-            loadData(txtSearchCustomers.getText());
+            searchNotifications(txtSearchCustomers.getText());
         }
     }//GEN-LAST:event_txtSearchCustomersActionPerformed
 
