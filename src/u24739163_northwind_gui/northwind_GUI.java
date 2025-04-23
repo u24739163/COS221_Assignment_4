@@ -1232,7 +1232,14 @@ public class northwind_GUI extends javax.swing.JFrame {
 
     private void jTBActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBActiveActionPerformed
         // TODO add your handling code here:
-        loadInactive();
+        if(jTBActive.isSelected()) {
+            jTBActive.setText("Inactive");
+            loadInactive();
+        } else {
+            jTBActive.setText("Active");
+            loadNotifications();
+        }
+        
     }//GEN-LAST:event_jTBActiveActionPerformed
 
     /**
