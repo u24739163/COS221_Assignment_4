@@ -273,6 +273,7 @@ public class northwind_GUI extends javax.swing.JFrame {
                 
                 Statement st = con.createStatement();
                 String sqlText;
+                
                 sqlText = "INSERT INTO customers (company, first_name, last_name, job_title, business_phone, fax_number, address, city, state_province, zip_postal_code, country_region) "
                         + "VALUES (\"" + company + "\", \"" + firstName + "\", \"" + lastName + "\", \"" + jobTitle + "\", \"" + businessPhone + "\", \"" + faxNumber + "\", \"" + address + "\", \"" + city + "\", \"" + stateProvince + "\", \"" + zipCode + "\", \"" + country + "\");" ;
                 System.out.println(sqlText);
